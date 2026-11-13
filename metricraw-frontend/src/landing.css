@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+html{scroll-behavior:smooth}
+body{margin:0;background:#0A2342}
+section{scroll-margin-top:70px}
+a{color:inherit;text-decoration:none}
+.h{font-family:'Jost',Arial,sans-serif;font-weight:300;text-transform:uppercase;line-height:1.04;letter-spacing:-.5px;margin:0}
+.h em{font-style:italic}
+.pill{display:inline-block;border-radius:999px;padding:13px 26px;font-weight:500;font-size:15px;transition:transform .3s,box-shadow .3s}
+.pill:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.nv a:hover{opacity:.6}
+.pn{overflow:hidden;position:relative}
+.pn .bg{position:absolute;inset:0;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.pn:hover .bg{transform:scale(1.1)}
+.row{transition:padding-left .4s,background .4s}
+.row:hover{padding-left:28px;background:rgba(255,255,255,.05)}
+.row:hover .t{font-style:italic}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.14)}}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes trk{from{opacity:0;letter-spacing:.28em}to{opacity:1;letter-spacing:-.5px}}
+@keyframes up{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(228,238,248,.6)}100%{box-shadow:0 0 0 22px rgba(228,238,248,0)}}
+@keyframes drift{0%,100%{transform:translate(0,0) rotate(-8deg)}50%{transform:translate(18px,-16px) rotate(-3deg)}}
+@keyframes sl{from{opacity:0;transform:translateX(-90px)}to{opacity:1;transform:none}}
+@keyframes sr{from{opacity:0;transform:translateX(90px)}to{opacity:1;transform:none}}
+@keyframes zm{from{opacity:0;transform:scale(.9) translateY(50px)}to{opacity:1;transform:none}}
+@keyframes ln{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.kb{animation:kb 20s ease-in-out infinite alternate}
+.lf{transform-origin:bottom;animation:sway 7s ease-in-out infinite}
+.lf2{transform-origin:bottom;animation:sway 9s -3s ease-in-out infinite}
+.t1{animation:trk 1.8s .3s both}.t2{animation:fade 1.4s 1s both}.t3{animation:up 1.2s 1.3s both}
+.rg{animation:ring 2s infinite}
+.dr{animation:drift 9s ease-in-out infinite}
+.lnx{transform-origin:left}
+@supports (animation-timeline:view()){
+.rv{animation:up linear both;animation-timeline:view();animation-range:entry 0% entry 50%}
+.sl{animation:sl linear both;animation-timeline:view();animation-range:entry 0% entry 60%}
+.sr{animation:sr linear both;animation-timeline:view();animation-range:entry 0% entry 60%}
+.zm{animation:zm linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
+.lnx{animation:ln linear both;animation-timeline:view();animation-range:entry 10% cover 45%}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.c-hero,.c-t1,.c-t2,.c-t3,.c-g1,.c-g2,.c-g3{background-repeat:no-repeat;background-size:cover;background-position:center}
+.c-hero{background-image:url(./assets/hero.jpg);background-position:center 45%}
+.c-t1{background-image:url(./assets/stretch.jpg);background-position:62% 20%}
+.c-t2{background-image:url(./assets/flatlay.jpg)}
+.c-t3{background-image:url(./assets/diet.jpg);background-position:center 60%}
+.c-g1{background-image:url(./assets/flatlay.jpg);background-size:300%;background-position:96% 96%}
+.c-g2{background-image:url(./assets/stretch.jpg);background-size:190%;background-position:70% 20%}
+.c-g3{background-image:url(./assets/flatlay.jpg);background-size:260%;background-position:95% 6%}
+.nb{background:rgba(8,28,54,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(244,248,252,.12)}
+@keyframes nbg{to{background:rgba(8,28,54,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom-color:rgba(244,248,252,.12)}}
+@supports (animation-timeline:scroll()){.nb{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom-color:transparent;animation:nbg linear both;animation-timeline:scroll(root);animation-range:0 420px}}
+.cd{transition:transform .35s,background .35s}
+.cd:hover{transform:translateY(-6px);background:rgba(255,255,255,.75)}
+
+/* blue theme */
+.c-hero{filter:saturate(.65) contrast(1.05)}
+.c-hero::after{content:'';position:absolute;inset:0;background:#0E4B94;mix-blend-mode:multiply;opacity:.55}
+.pn .bg::after{content:'';position:absolute;inset:0;background:#2F7FD0;mix-blend-mode:multiply;opacity:.3}
+section#top h1 em,#services .h em,#join .h em{color:#8EC5FF}

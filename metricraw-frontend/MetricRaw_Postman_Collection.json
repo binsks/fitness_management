@@ -1,0 +1,410 @@
+{
+  "info": {
+    "name": "MetricRaw API",
+    "description": "Full collection for MetricRaw Django Backend with automatic JWT token management.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"athlete1\",\n  \"email\": \"athlete1@example.com\",\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Raw\",\n  \"password\": \"Password123!\",\n  \"password2\": \"Password123!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/register/", "host": ["{{baseUrl}}"], "path": ["api", "register", ""] }
+          }
+        },
+        {
+          "name": "Login (Auto-saves Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.access) {",
+                  "    pm.collectionVariables.set('token', json.access);",
+                  "    console.log('JWT Token saved!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"athlete1\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login/", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login", ""] }
+          }
+        },
+        {
+          "name": "Admin Login (Superuser)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.access) {",
+                  "    pm.collectionVariables.set('token', json.access);",
+                  "    console.log('Admin Superuser Token saved!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin_super\",\n  \"password\": \"AdminPassword123!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login/", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Profile & Goals",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/profile/", "host": ["{{baseUrl}}"], "path": ["api", "profile", ""] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"age\": 25,\n  \"height_cm\": 180,\n  \"weight_kg\": 76.5,\n  \"experience\": \"intermediate\",\n  \"equipment\": \"gym\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/profile/", "host": ["{{baseUrl}}"], "path": ["api", "profile", ""] }
+          }
+        },
+        {
+          "name": "Get Goals",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/goals/", "host": ["{{baseUrl}}"], "path": ["api", "goals", ""] }
+          }
+        },
+        {
+          "name": "Create Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"goal\": \"muscle_gain\",\n  \"days_per_week\": 4,\n  \"session_minutes\": 60\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/goals/", "host": ["{{baseUrl}}"], "path": ["api", "goals", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Workouts",
+      "item": [
+        {
+          "name": "Generate Workout Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"goal\": \"muscle_gain\",\n  \"days_per_week\": 4,\n  \"session_minutes\": 60\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/workouts/generate/", "host": ["{{baseUrl}}"], "path": ["api", "workouts", "generate", ""] }
+          }
+        },
+        {
+          "name": "List Workouts",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/workouts/", "host": ["{{baseUrl}}"], "path": ["api", "workouts", ""] }
+          }
+        },
+        {
+          "name": "List Exercises",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/exercises/", "host": ["{{baseUrl}}"], "path": ["api", "exercises", ""] }
+          }
+        },
+        {
+          "name": "Log Workout History",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workout_day\": 1,\n  \"duration_minutes\": 50,\n  \"completed\": true,\n  \"notes\": \"Upper body workout completed\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/workout-history/", "host": ["{{baseUrl}}"], "path": ["api", "workout-history", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Progress Tracking",
+      "item": [
+        {
+          "name": "Log Daily Progress",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-11-13\",\n  \"weight_kg\": 76.2,\n  \"body_fat\": 15.8,\n  \"waist_cm\": 82.0,\n  \"chest_cm\": 102.5,\n  \"notes\": \"Morning check-in\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/progress/", "host": ["{{baseUrl}}"], "path": ["api", "progress", ""] }
+          }
+        },
+        {
+          "name": "Get Progress Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/progress/summary/", "host": ["{{baseUrl}}"], "path": ["api", "progress", "summary", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. AI Coach & Nutrition",
+      "item": [
+        {
+          "name": "Chat with AI Coach",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"What is the best rep range for hypertrophy?\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/ai/chat/", "host": ["{{baseUrl}}"], "path": ["api", "ai", "chat", ""] }
+          }
+        },
+        {
+          "name": "Nutrition Suggestions",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/api/nutrition/suggestions/", "host": ["{{baseUrl}}"], "path": ["api", "nutrition", "suggestions", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Store & Cart",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/products/", "host": ["{{baseUrl}}"], "path": ["api", "products", ""] }
+          }
+        },
+        {
+          "name": "Top Selling Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/products/top-selling/", "host": ["{{baseUrl}}"], "path": ["api", "products", "top-selling", ""] }
+          }
+        },
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": 1,\n  \"quantity\": 1\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/cart/items/", "host": ["{{baseUrl}}"], "path": ["api", "cart", "items", ""] }
+          }
+        },
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/cart/", "host": ["{{baseUrl}}"], "path": ["api", "cart", ""] }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipping_address\": \"456 Elm Street, City, Country\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/orders/create/", "host": ["{{baseUrl}}"], "path": ["api", "orders", "create", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Admin Console (Superuser)",
+      "item": [
+        {
+          "name": "Me (Check Superuser)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/me/", "host": ["{{baseUrl}}"], "path": ["api", "me", ""] }
+          }
+        },
+        {
+          "name": "Admin Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/stats/", "host": ["{{baseUrl}}"], "path": ["api", "admin", "stats", ""] }
+          }
+        },
+        {
+          "name": "Admin Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/users/", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users", ""] }
+          }
+        },
+        {
+          "name": "Admin Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/products/", "host": ["{{baseUrl}}"], "path": ["api", "admin", "products", ""] }
+          }
+        },
+        {
+          "name": "Admin Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/categories/", "host": ["{{baseUrl}}"], "path": ["api", "admin", "categories", ""] }
+          }
+        },
+        {
+          "name": "Admin Exercises",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/exercises/", "host": ["{{baseUrl}}"], "path": ["api", "admin", "exercises", ""] }
+          }
+        },
+        {
+          "name": "Admin Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/orders/", "host": ["{{baseUrl}}"], "path": ["api", "admin", "orders", ""] }
+          }
+        }
+      ]
+    }
+  ]
+}

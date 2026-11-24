@@ -80,7 +80,7 @@ function AdminShell() {
   }
 
   useEffect(() => {
-    if (!getAccess()) { navigate('/login'); return }
+    if (!getAccess()) { navigate('/admin/login'); return }
     let alive = true
     ;(async () => {
       try {
@@ -93,7 +93,7 @@ function AdminShell() {
         if (alive) setState('ok')
       } catch (e) {
         if (!alive) return
-        if (e instanceof ApiError && e.status === 401) { clearTokens(); navigate('/login'); return }
+        if (e instanceof ApiError && e.status === 401) { clearTokens(); navigate('/admin/login'); return }
         if (e instanceof ApiError && e.status === 403) { setState('denied'); return }
         setErr(errText(e))
         setState('error')
@@ -164,7 +164,7 @@ function AdminShell() {
     if (e.key === 'ArrowLeft') n = (i - 1 + TABS.length) % TABS.length
     if (n >= 0) { e.preventDefault(); setTab(TABS[n].id); els.current[TABS[n].id]?.focus() }
   }
-  function logout() { clearTokens(); navigate('/login') }
+  function logout() { clearTokens(); navigate('/admin/login') }
 
   if (state === 'loading') return <div className="adm adm-center"><p>Checking access…</p></div>
 

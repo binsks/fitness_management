@@ -37,7 +37,8 @@ class CartItem(models.Model):
     cart=models.ForeignKey(Cart,on_delete=models.CASCADE,related_name='items'); product=models.ForeignKey(Product,on_delete=models.PROTECT); quantity=models.PositiveIntegerField(default=1)
     class Meta: unique_together=[('cart','product')]
 class Order(models.Model):
-    user=models.ForeignKey(User,on_delete=models.PROTECT,related_name='orders'); status=models.CharField(max_length=20,default='pending'); total=models.DecimalField(max_digits=12,decimal_places=2); shipping_address=models.TextField(); created_at=models.DateTimeField(auto_now_add=True)
+    PAY=[('cod','Cash on delivery'),('upi','UPI'),('card','Card')]
+    user=models.ForeignKey(User,on_delete=models.PROTECT,related_name='orders'); status=models.CharField(max_length=20,default='pending'); total=models.DecimalField(max_digits=12,decimal_places=2); shipping_address=models.TextField(); billing_address=models.TextField(blank=True); payment_method=models.CharField(max_length=20,choices=PAY,default='cod'); created_at=models.DateTimeField(auto_now_add=True)
 class OrderItem(models.Model):
     order=models.ForeignKey(Order,on_delete=models.CASCADE,related_name='items'); product=models.ForeignKey(Product,on_delete=models.PROTECT); product_name=models.CharField(max_length=180); unit_price=models.DecimalField(max_digits=10,decimal_places=2); quantity=models.PositiveIntegerField()
 class Recommendation(models.Model): user=models.ForeignKey(User,on_delete=models.CASCADE); product=models.ForeignKey(Product,on_delete=models.CASCADE); reason=models.TextField(); created_at=models.DateTimeField(auto_now_add=True)

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api } from '../api'
 import { errText, fmtDate, money, num, rows } from '../dashboard/util'
+import { payLabel } from '../store/helpers'
 import { downloadCsv } from './csv'
 import DataTable from './DataTable'
 import type { Col } from './DataTable'
@@ -10,7 +11,7 @@ import { useConfirm } from './confirm'
 import { useToast } from './toast'
 
 type Item = { id: number; product_name: string; unit_price: string | number; quantity: number }
-type Order = { id: number; username: string; status: string; total: string | number; shipping_address: string; created_at: string; items: Item[] }
+type Order = { id: number; username: string; status: string; total: string | number; shipping_address: string; billing_address?: string; payment_method?: string; created_at: string; items: Item[] }
 const FLOW = ['pending', 'paid', 'shipped', 'delivered']
 const FALLBACK = [...FLOW, 'cancelled']
 const isCancel = (s: string) => /^cancel/i.test(s)
@@ -112,13 +113,14 @@ export default function Orders({ intent }: { intent?: Intent | null }) {
     const span = WHEN.find((w) => w.id === when)?.ms ?? 0
     const since = when === 'today' ? new Date().setHours(0, 0, 0, 0) : Date.now() - span
     return list.filter((o) => (chip === 'all' || o.status === chip) && (!span || +new Date(o.created_at) >= since)
-      && (!t || `${o.id} ${o.username} ${o.status} ${o.shipping_address}`.toLowerCase().includes(t)))
+      && (!t || `${o.id} ${o.username} ${o.status} ${o.shipping_address} ${o.billing_address ?? ''} ${o.payment_method ?? ''}`.toLowerCase().includes(t)))
   }, [list, q, chip, when])
 
   const cols: Col<Order>[] = [
     { key: 'id', label: 'Order', sortBy: (o) => o.id, csv: (o) => String(o.id), cell: (o) => `#${o.id}` },
     { key: 'user', label: 'Customer', sortBy: (o) => o.username.toLowerCase(), csv: (o) => o.username, cell: (o) => o.username },
     { key: 'date', label: 'Date', sortBy: (o) => o.created_at, csv: (o) => o.created_at, cell: (o) => fmtDate(o.created_at) },
+    { key: 'pay', label: 'Billing', sortBy: (o) => o.payment_method ?? '', csv: (o) => payLabel(o.payment_method), cell: (o) => payLabel(o.payment_method) },
     { key: 'status', label: 'Status', sortBy: (o) => o.status, csv: (o) => o.status, cell: (o) => <span className="adm-chip">{o.status}</span> },
     { key: 'items', label: 'Items', sortBy: (o) => o.items.length, csv: (o) => o.items.map((i) => `${i.product_name} x${i.quantity}`).join('; '), cell: (o) => o.items.length },
     { key: 'total', label: 'Total', sortBy: (o) => num(o.total) ?? 0, csv: (o) => String(o.total), cell: (o) => money(o.total) },
@@ -223,6 +225,8 @@ export default function Orders({ intent }: { intent?: Intent | null }) {
             </ul>
             <h3 className="adm-h3">Ship to</h3>
             <p className="adm-addr">{open.shipping_address || '—'}</p>
+            <h3 className="adm-h3">Billing</h3>
+            <p className="adm-addr">{payLabel(open.payment_method)}{open.billing_address ? ` · ${open.billing_address}` : ''}</p>
           </div>
         </div>
       )}

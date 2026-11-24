@@ -63,7 +63,17 @@ body{margin:0;background:#D5E4F4}
 .st-drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#EAF2FA;z-index:50;padding:26px;display:flex;flex-direction:column;gap:14px;transform:translateX(105%);transition:transform .45s cubic-bezier(.2,.7,.2,1);overflow-y:auto}
 .st-drawer.on{transform:none}.st-drawer h2{margin:0}
 .st-items{list-style:none;margin:0;padding:0}.st-items li{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid rgba(11,31,54,.1)}
-.st-drawer textarea{font:inherit;padding:11px 14px;border:1.5px solid rgba(11,31,54,.25);border-radius:10px;background:#fff;color:#0B1F36;resize:vertical}
+.st-drawer textarea{font:inherit;padding:11px 14px;border:1.5px solid rgba(11,31,54,.25);border-radius:10px;background:#fff;color:#0B1F36;resize:vertical;width:100%}
+.st-lbl{display:grid;gap:6px;font-size:13px;color:#4A6078}
+.st-pay{border:1.5px solid rgba(11,31,54,.15);border-radius:12px;padding:10px 12px;margin:0;display:grid;gap:8px}
+.st-pay legend{padding:0 6px;font-size:13px;color:#4A6078}
+.st-payopt{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;border:1.5px solid transparent}
+.st-payopt:hover{background:rgba(14,90,167,.06)}
+.st-payopt.on{background:rgba(14,90,167,.1);border-color:#0E5AA7}
+.st-payopt input{margin-top:3px;accent-color:#0E5AA7}
+.st-payopt span{display:grid;gap:1px}.st-payopt b{font-weight:500;color:#0B1F36}.st-payopt i{font-style:normal;font-size:13px;color:#4A6078}
+.st-check{display:flex;align-items:center;gap:8px;font-size:14px;color:#0B1F36;cursor:pointer}
+.st-check input{accent-color:#0E5AA7;width:16px;height:16px}
 .st-x{background:none;border:0;font-size:26px;line-height:1;color:#4A6078;cursor:pointer;padding:0 0 0 10px}.st-x.sm{font-size:20px;color:#9A2B1B}
 
 
@@ -169,3 +179,30 @@ body{background:#0A2342}
 .st-frame{max-width:none;min-height:100vh;border-radius:0;border:0;box-shadow:none}
 .st-hero{min-height:clamp(380px,46vh,520px)}
 .st-top.stuck{border-radius:0}
+
+.st-billlink{color:#0E5AA7;text-decoration:none;font-weight:500;white-space:nowrap}.st-billlink:hover{text-decoration:underline}
+.st-billpage{max-width:860px;margin:0 auto}
+.st-bill-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.st-bill-actions .st-btn.alt{color:#fff;border-color:rgba(255,255,255,.55);text-decoration:none;display:inline-flex;align-items:center}
+.st-bill{background:#F4F8FC;color:#0B1F36;border-radius:8px;padding:28px 30px;border:1px solid rgba(255,255,255,.6)}
+.st-billhead{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1.5px solid rgba(11,31,54,.15);margin-bottom:20px}
+.st-billhead .st-flogo{color:#0B1F36;letter-spacing:4px}.st-billhead .st-fsmall{color:#4A6078;margin:8px 0 0}
+.st-billmeta{display:grid;justify-items:end;gap:4px;text-align:right;font-size:14px}
+.st-billmeta b{font-size:22px;font-weight:500;letter-spacing:2px;text-transform:uppercase}
+.st-billgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;margin-bottom:22px}
+.st-billgrid h3{margin:0 0 6px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#4A6078;font-weight:500}
+.st-billgrid p{margin:0;white-space:pre-wrap}
+.st-bill table{width:100%;border-collapse:collapse}
+.st-bill th{text-align:left;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#4A6078;padding:8px 0;border-bottom:1.5px solid rgba(11,31,54,.2)}
+.st-bill td{padding:10px 0;border-bottom:1px solid rgba(11,31,54,.08)}
+.st-bill th:nth-child(2),.st-bill td:nth-child(2),.st-bill th:nth-child(3),.st-bill td:nth-child(3),.st-bill th:nth-child(4),.st-bill td:nth-child(4){text-align:right}
+.st-billtot{display:flex;justify-content:flex-end;align-items:baseline;gap:18px;margin-top:16px;font-size:18px}
+.st-billtot strong{font-size:26px;font-weight:500}
+.st-billnote{margin:22px 0 0;font-size:13px;color:#4A6078}
+
+@media print{
+  body,.st{background:#fff!important}
+  .st-sticky,.st-foot,.st-veil,.st-drawer,.st-toast,.st-bill-actions{display:none!important}
+  .st-frame,.st-main{background:#fff!important;color:#0B1F36!important;padding:0!important}
+  .st-bill{border:0;padding:0;background:#fff}
+}

@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { api } from '../api'
 import type { Order, Product, Rec } from '../dashboard/types'
 import { fmtDate, money, num, rows } from '../dashboard/util'
+import { payLabel } from '../store/helpers'
 import ProductCard from '../store/ProductCard'
 import StoreShell from '../store/StoreShell'
 import type { Cmd } from '../dashboard/Palette'
@@ -26,14 +27,21 @@ export default function StorePage() {
   const [recs, setRecs] = useState<Rec[]>([])
   const [top, setTop] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const productRequest = useRef(0)
 
-  const loadProducts = useCallback(async () => {
+  const loadProducts = useCallback(async (requestId: number) => {
     const qs = new URLSearchParams()
-    if (q) qs.set('search', q)
+    const search = q.trim()
+    if (search) qs.set('search', search)
     if (cat) qs.set('category', String(cat))
-    try { setProducts(rows(await api.get<List<Product>>(`/api/products/?${qs}`))) }
-    catch (e) { fail(e) }
-    finally { setLoading(false) }
+    try {
+      const result = rows(await api.get<List<Product>>(`/api/products/?${qs}`))
+      if (requestId === productRequest.current) setProducts(result)
+    } catch (e) {
+      if (requestId === productRequest.current) fail(e)
+    } finally {
+      if (requestId === productRequest.current) setLoading(false)
+    }
   }, [q, cat, fail])
   const loadOrders = useCallback(async () => {
     try { setOrders(rows(await api.get<List<Order>>('/api/orders/'))) } catch { /* shown empty */ }
@@ -50,8 +58,13 @@ export default function StorePage() {
   }, [loadOrders, loadRecs])
 
   useEffect(() => {
-    const t = setTimeout(loadProducts, 250)
-    return () => clearTimeout(t)
+    const requestId = ++productRequest.current
+    setLoading(true)
+    const t = setTimeout(() => loadProducts(requestId), 250)
+    return () => {
+      clearTimeout(t)
+      if (productRequest.current === requestId) productRequest.current++
+    }
   }, [loadProducts])
 
   // Jump to #top-selling / #orders when arriving from another store page.
@@ -70,13 +83,16 @@ export default function StorePage() {
 
   // Real best sellers come from /api/products/top-selling/. Until that exists, show the first products as 'Featured'.
   const topReal = top.length > 0
-  const topList = topReal ? top : !q && !cat ? products.slice(0, 4) : []
+  const topList = q.trim() || cat ? [] : topReal ? top : products.slice(0, 4)
 
   async function getRecs() {
     try { await api.post('/api/recommendations/', {}); await loadRecs() } catch (e) { fail(e) }
   }
 
-  const extra: Cmd[] = products.map((p) => ({ id: `p${p.id}`, label: `Open ${p.name}`, hint: money(p.price), run: () => navigate(`/store/${p.id}`) }))
+  const extra: Cmd[] = [
+    ...products.map((p) => ({ id: `p${p.id}`, label: `Open ${p.name}`, hint: money(p.price), run: () => navigate(`/store/${p.id}`) })),
+    ...orders.map((o) => ({ id: `b${o.id}`, label: `Open bill #${o.id}`, hint: money(o.total), run: () => navigate(`/store/bill/${o.id}`) })),
+  ]
 
   const hero = (
     <section className="st-hero">
@@ -144,11 +160,13 @@ export default function StorePage() {
           <h2>Your <em>orders</em></h2>
           {orders.length ? (
             <div className="st-scroll"><table>
-              <thead><tr><th>Order</th><th>Date</th><th>Items</th><th>Status</th><th>Total</th></tr></thead>
+              <thead><tr><th>Order</th><th>Date</th><th>Items</th><th>Billing</th><th>Status</th><th>Total</th><th></th></tr></thead>
               <tbody>{orders.map((o) => (
                 <tr key={o.id}><td>#{o.id}</td><td>{fmtDate(o.created_at)}</td>
                   <td>{o.items.map((i) => `${i.product_name} × ${i.quantity}`).join(', ')}</td>
-                  <td><span className="st-chip">{o.status}</span></td><td>{money(o.total)}</td></tr>
+                  <td>{payLabel(o.payment_method)}</td>
+                  <td><span className="st-chip">{o.status}</span></td><td>{money(o.total)}</td>
+                  <td><Link to={`/store/bill/${o.id}`} className="st-billlink">View bill</Link></td></tr>
               ))}</tbody>
             </table></div>
           ) : <p className="st-empty">No orders yet.</p>}

@@ -6,6 +6,21 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
+# Windows application control can block psycopg's bundled binary extension.
+# Prefer psycopg's pure-Python wrapper and use an installed PostgreSQL libpq.
+_libpq_dll_directory = None
+if os.name == 'nt':
+    os.environ.setdefault('PSYCOPG_IMPL', 'python')
+    postgres_root = Path(os.environ.get('ProgramFiles', r'C:\Program Files')) / 'PostgreSQL'
+    postgres_bins = sorted(
+        (path for path in postgres_root.glob('*/bin') if (path / 'libpq.dll').is_file()),
+        reverse=True,
+    )
+    if postgres_bins:
+        postgres_bin = str(postgres_bins[0])
+        os.environ['PATH'] = postgres_bin + os.pathsep + os.environ.get('PATH', '')
+        _libpq_dll_directory = os.add_dll_directory(postgres_bin)
+
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-key')
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 ALLOWED_HOSTS = [x.strip() for x in os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',') if x.strip()]

@@ -6,6 +6,7 @@ import { clearTokens } from '../auth'
 import Palette from '../dashboard/Palette'
 import type { Cmd } from '../dashboard/Palette'
 import { money } from '../dashboard/util'
+import { PAY } from './helpers'
 import type { CartApi } from './useCart'
 import '../store.css'
 
@@ -21,7 +22,7 @@ const NAV: { id: string; label: string; to: To }[] = [
 export default function StoreShell({ c, hero, extra = [], onOrdered, children }: Props) {
   const navigate = useNavigate()
   const loc = useLocation()
-  const active = loc.hash === '#orders' ? 'orders' : loc.hash === '#top-selling' ? 'top' : 'store'
+  const active = loc.pathname.startsWith('/store/bill') || loc.hash === '#orders' ? 'orders' : loc.hash === '#top-selling' ? 'top' : 'store'
   const els = useRef<Record<string, HTMLElement | null>>({})
   const right = useRef<HTMLDivElement>(null)
   const [ind, setInd] = useState({ left: 0, width: 0 })
@@ -176,8 +177,30 @@ export default function StoreShell({ c, hero, extra = [], onOrdered, children }:
               ))}
             </ul>
             <div className="st-row"><strong>Total</strong><strong>{money(c.cart?.total)}</strong></div>
-            <textarea rows={3} placeholder="Shipping address" value={c.address} onChange={(e) => c.setAddress(e.target.value)} />
-            <button className="st-btn" onClick={() => c.placeOrder(onOrdered)} disabled={c.busy}>{c.busy ? 'Placing…' : 'Place order'}</button>
+            <label className="st-lbl">Shipping address
+              <textarea rows={3} placeholder="Street, city, PIN" value={c.address} onChange={(e) => c.setAddress(e.target.value)} />
+            </label>
+            <fieldset className="st-pay">
+              <legend>Billing</legend>
+              {PAY.map((p) => (
+                <label key={p.id} className={`st-payopt${c.pay === p.id ? ' on' : ''}`}>
+                  <input type="radio" name="st-pay" value={p.id} checked={c.pay === p.id} onChange={() => c.setPay(p.id)} />
+                  <span><b>{p.label}</b><i>{p.hint}</i></span>
+                </label>
+              ))}
+            </fieldset>
+            <label className="st-check">
+              <input type="checkbox" checked={c.sameBill} onChange={(e) => c.setSameBill(e.target.checked)} />
+              Billing address same as shipping
+            </label>
+            {!c.sameBill && (
+              <label className="st-lbl">Billing address
+                <textarea rows={3} placeholder="Name on bill, street, city, PIN" value={c.billing} onChange={(e) => c.setBilling(e.target.value)} />
+              </label>
+            )}
+            <button className="st-btn" onClick={() => c.placeOrder(onOrdered)} disabled={c.busy}>
+              {c.busy ? 'Placing…' : c.pay === 'cod' ? 'Place order' : `Pay ${money(c.cart?.total)}`}
+            </button>
           </>
         ) : <p className="st-empty">Your cart is empty.</p>}
       </aside>

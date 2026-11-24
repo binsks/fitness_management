@@ -144,3 +144,216 @@
 /* "both" kept a transform on <main> after its entrance animation, which trapped the position:fixed
    forms and side panels inside it (they opened off-screen once the page was scrolled). */
 .adm-main{animation:db-up .4s backwards}
+
+/* ===== Dedicated Admin Login ===== */
+.adm-login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.adm-login-card {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(240, 246, 253, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 14px;
+  padding: 36px 32px;
+  box-shadow: 0 30px 80px rgba(2, 12, 30, 0.55), 0 0 0 1px rgba(191, 217, 242, 0.25);
+  color: #0B1F36;
+  animation: db-up 0.5s both;
+}
+
+.adm-login-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(11, 31, 54, 0.1);
+}
+
+.adm-login-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14, 90, 167, 0.1);
+  color: #0E5AA7;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.adm-login-badge svg {
+  color: #0E5AA7;
+}
+
+.adm-login-header h1 {
+  margin: 0 0 8px;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: #0B1F36;
+}
+
+.adm-login-header p {
+  margin: 0 0 24px;
+  color: #4A6078;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.adm-login-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(180, 50, 31, 0.08);
+  border: 1px solid rgba(180, 50, 31, 0.25);
+  border-left: 4px solid #B3321F;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+  color: #9A2B1B;
+  font-size: 14px;
+  line-height: 1.45;
+  animation: db-up 0.3s both;
+}
+
+.adm-login-alert svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.adm-login-form {
+  display: grid;
+  gap: 18px;
+}
+
+.adm-login-field {
+  display: grid;
+  gap: 6px;
+}
+
+.adm-login-field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #3C526A;
+  letter-spacing: 0.2px;
+}
+
+.adm-login-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.adm-login-toggle {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: #0E5AA7;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.adm-login-toggle:hover {
+  text-decoration: underline;
+}
+
+.adm-login-field input {
+  font: inherit;
+  font-size: 15px;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(11, 31, 54, 0.18);
+  border-radius: 6px;
+  background: #fff;
+  color: #0B1F36;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.adm-login-field input:focus {
+  border-color: #0E5AA7;
+  box-shadow: 0 0 0 3px rgba(14, 90, 167, 0.18);
+}
+
+.adm-login-btn {
+  margin-top: 8px;
+  padding: 13px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 6px;
+  background: #0C2C52;
+  box-shadow: 0 6px 18px rgba(12, 44, 82, 0.35);
+  transition: background 0.25s, transform 0.2s, box-shadow 0.2s;
+}
+
+.adm-login-btn:hover:not(:disabled) {
+  background: #0E5AA7;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(14, 90, 167, 0.4);
+}
+
+.adm-login-spin-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.adm-login-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: adm-spin 0.8s linear infinite;
+}
+
+@keyframes adm-spin {
+  to { transform: rotate(360deg); }
+}
+
+.adm-login-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(11, 31, 54, 0.08);
+  font-size: 13.5px;
+  color: #4A6078;
+}
+
+.adm-login-link {
+  color: #0E5AA7;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.adm-login-link:hover {
+  text-decoration: underline;
+}
+
+.adm-login-sep {
+  opacity: 0.4;
+}
+
+@media (max-width: 480px) {
+  .adm-login-card {
+    padding: 24px 20px;
+  }
+}

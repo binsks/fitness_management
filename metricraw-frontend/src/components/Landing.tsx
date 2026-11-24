@@ -7,7 +7,7 @@ export default function Landing() {
     <div style={{ position: "sticky", top: "0", zIndex: "50", height: "0" }}><header className="nv nb" style={{ position: "absolute", left: "0", right: "0", top: "0", display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "center", justifyContent: "space-between", padding: "16px 4vw", color: "#F4F8FC", boxSizing: "border-box" }}>
     <a href="#top" style={{ fontWeight: "500", fontSize: "26px", letterSpacing: "6px", textTransform: "uppercase" }}>Metric<em style={{ fontWeight: "300" }}>Raw</em></a>
     <nav style={{ display: "flex", flexWrap: "wrap", gap: "28px", alignItems: "center", fontSize: "15px" }}>
-    <a href="#space">Features</a><a href="#goals">Goals</a><a href="#about">About</a><a href="#services">Platform</a><a href="#store">Store</a><a href="#ai">AI Coach</a><a href="/login">Log in</a>
+    <a href="#space">Features</a><a href="#goals">Goals</a><a href="#about">About</a><a href="#services">Platform</a><a href="#store">Store</a><a href="#ai">AI Coach</a><a href="/login">Log in</a><a href="/admin/login">Admin</a>
     </nav>
     <a className="pill" href="/register" style={{ background: "#F4F8FC", color: "#0B1F36" }}>Get early access</a>
     </header></div>

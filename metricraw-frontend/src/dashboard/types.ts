@@ -18,13 +18,15 @@ export type ProgressRow = {
 }
 export type Product = {
   id: number; name: string; price: string | number; stock: number
-  category_name?: string; description?: string; image?: string | null; sold?: number; category?: number
+  category_name?: string; description?: string; image_url?: string | null; sold?: number; category?: number
 }
 export type CartItem = { id: number; product: Product; quantity: number; subtotal: string | number }
 export type Cart = { id: number; items: CartItem[]; total: string | number }
 export type OrderItem = { id: number; product_name: string; unit_price: string | number; quantity: number }
+export type PayMethod = 'cod' | 'upi' | 'card'
 export type Order = {
   id: number; status: string; total: string | number; shipping_address: string
+  billing_address?: string; payment_method?: PayMethod | string
   created_at: string; items: OrderItem[]
 }
 export type Rec = { id: number; product: Product; reason: string }

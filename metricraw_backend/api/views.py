@@ -114,16 +114,24 @@ class CartRemove(APIView):
 class OrderList(generics.ListAPIView):
     serializer_class=OrderSerializer; permission_classes=[IsAuthenticated]
     def get_queryset(self): return Order.objects.filter(user=self.request.user)
+class OrderDetail(generics.RetrieveAPIView):
+    serializer_class=OrderSerializer; permission_classes=[IsAuthenticated]
+    def get_queryset(self): return Order.objects.filter(user=self.request.user).prefetch_related('items')
 class CreateOrder(APIView):
     permission_classes=[IsAuthenticated]
     @transaction.atomic
     def post(self,request):
         address=str(request.data.get('shipping_address','')).strip(); cart=Cart.objects.filter(user=request.user).first()
+        pay=str(request.data.get('payment_method','cod')).strip().lower()
+        allowed={k for k,_ in Order.PAY}
+        if pay not in allowed:return Response({'detail':'Choose a valid billing option: cash on delivery, UPI, or card.'},status=400)
+        billing=str(request.data.get('billing_address','')).strip() or address
         if not address:return Response({'detail':'shipping_address is required.'},status=400)
         if not cart or not cart.items.exists():return Response({'detail':'Cart is empty.'},status=400)
         for i in cart.items.select_related('product'):
             if i.quantity>i.product.stock:return Response({'detail':f'Insufficient stock for {i.product.name}.'},status=400)
-        order=Order.objects.create(user=request.user,total=0,shipping_address=address); total=0
+        status_val='paid' if pay in ('upi','card') else 'pending'
+        order=Order.objects.create(user=request.user,total=0,status=status_val,shipping_address=address,billing_address=billing,payment_method=pay); total=0
         for i in cart.items.select_related('product'):
             p=i.product; OrderItem.objects.create(order=order,product=p,product_name=p.name,unit_price=p.price,quantity=i.quantity); p.stock-=i.quantity; p.save(update_fields=['stock']); total+=p.price*i.quantity
         order.total=total; order.save(update_fields=['total']); cart.items.all().delete(); return Response(OrderSerializer(order).data,status=201)

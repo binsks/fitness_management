@@ -231,9 +231,9 @@ class AdminOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ["id", "username", "status", "total", "shipping_address", "created_at", "items"]
+        fields = ["id", "username", "status", "total", "shipping_address", "billing_address", "payment_method", "created_at", "items"]
         # Only the status can be edited; everything else is a record of what happened.
-        read_only_fields = ["id", "username", "total", "shipping_address", "created_at", "items"]
+        read_only_fields = ["id", "username", "total", "shipping_address", "billing_address", "payment_method", "created_at", "items"]
 
 
 class AdminOrderList(generics.ListAPIView):

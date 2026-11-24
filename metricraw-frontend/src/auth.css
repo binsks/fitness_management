@@ -7,8 +7,8 @@ body{margin:0;background:#E4EEF8}
 /* photo side */
 .au-side{position:relative;overflow:hidden;color:#F4F8FC;display:flex;flex-direction:column;justify-content:space-between;padding:34px 40px;min-height:100vh;background:#0A2342}
 .au-bg{position:absolute;inset:0;background-size:cover;background-position:center;animation:au-kb 22s ease-in-out infinite alternate}
-.au-bg.login{background-image:url('./assets/hero.jpg')}
-.au-bg.register{background-image:url('./assets/stretch.jpg');background-position:62% 20%}
+.au-bg.login{background-image:url('./assets/bjj-cardio.jpg')}
+.au-bg.register{background-image:url('./assets/bjj-cardio.jpg');background-position:center 38%}
 .au-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,28,54,.55),rgba(8,28,54,.22) 45%,rgba(8,28,54,.78))}
 .au-logo,.au-quote{position:relative}
 .au-logo{font-weight:500;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:inherit;text-decoration:none}
@@ -70,3 +70,10 @@ body{margin:0;background:#E4EEF8}
 .au-btn{border-radius:6px}
 .au-btn:hover:not(:disabled){background:#0A4780}
 .au-show{color:#0E5AA7}
+
+/* Keep the higher-resolution login photo crisp while it fills the panel. */
+.au-bg.login{animation:none;filter:none;background-position:center 38%}
+.au-bg.login::after{opacity:.38}
+
+.au-bg.register{animation:none;filter:none}
+.au-bg.register::after{opacity:.38}

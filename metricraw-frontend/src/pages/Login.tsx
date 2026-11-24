@@ -72,6 +72,7 @@ export default function Login() {
             {loading ? 'Signing in…' : 'Log in'}
           </button>
           <p className="au-alt">New to MetricRaw? <Link to="/register">Create an account</Link></p>
+          <p className="au-alt"><Link to="/admin/login">Administrator sign in</Link></p>
         </form>
       </main>
     </div>
